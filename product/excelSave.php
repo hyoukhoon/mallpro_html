@@ -2,9 +2,9 @@
 include $_SERVER["DOCUMENT_ROOT"]."/inc/dbcon.php";
 $uid=$_SESSION['AID'];
 
-//error_reporting(E_ALL);
-//ini_set('display_errors', TRUE);
-//ini_set('display_startup_errors', TRUE);
+error_reporting(E_ALL);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
 date_default_timezone_set('Asia/Seoul');
 
 $jsonCheck=urldecode($_GET['jsonCheck']);
