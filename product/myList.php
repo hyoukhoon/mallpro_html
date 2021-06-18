@@ -637,7 +637,7 @@ foreach($rsc as $p){
 							</tr>
 							<tr>
 								<td style="width:50%;background-color:#fff;">
-									<textarea name="itemMemo_<?=$p->num?>" id="itemMemo" placeholder="메모를 입력하세요." style="width:100%;height:80px;font-size:14px;"><?echo stripslashes($p->itemName);?></textarea>
+									<textarea name="itemMemo_<?=$p->num?>" id="itemMemo" placeholder="메모를 입력하세요." style="width:100%;height:40px;font-size:14px;"><?echo stripslashes($p->itemName);?></textarea>
 								</td>
 							</tr>
 						</table>
