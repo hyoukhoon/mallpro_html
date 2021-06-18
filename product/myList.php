@@ -635,6 +635,11 @@ foreach($rsc as $p){
 									<span style="font-size:10px;" id="subjectCn_<?=$p->num?>"><?echo $p->subject;?></span>
 								</td>
 							</tr>
+							<tr>
+								<td style="width:50%;background-color:#fff;">
+									<textarea name="itemMemo_<?=$p->num?>" id="itemMemo" placeholder="메모를 입력하세요." style="width:100%;height:80px;font-size:14px;"><?echo stripslashes($p->itemName);?></textarea>
+								</td>
+							</tr>
 						</table>
 					  </td>
 					  
