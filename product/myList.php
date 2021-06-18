@@ -1258,6 +1258,13 @@ $("#mySave, #mySave2").click(function(){
 	});
 
 	var total_cnt=0;
+	var memoArray=new Array();
+	$('textarea[id="itemMemo"]').each(function() {
+			memoArray[total_cnt]=this.value;//배열로 저장
+			total_cnt++;
+	});
+
+	var total_cnt=0;
 	var priceArray=new Array();
 	$('input:text[id="myPrice"]').each(function() {
 
@@ -1389,6 +1396,7 @@ $("#mySave, #mySave2").click(function(){
 //	console.log(total_cnt);
 	var jsonCheck = encodeURIComponent(JSON.stringify(checkArray));//json으로 바꿈
 	var jsonName = encodeURIComponent(JSON.stringify(nameArray));//json으로 바꿈
+	var jsonMemo = encodeURIComponent(JSON.stringify(memoArray));//json으로 바꿈
 	var jsonPrice = encodeURIComponent(JSON.stringify(priceArray));//json으로 바꿈
 	var jsonSendMethod = encodeURIComponent(JSON.stringify(sendMethodArray));//json으로 바꿈
 	var jsonSendFeePayType = encodeURIComponent(JSON.stringify(sendFeePayTypeArray));//json으로 바꿈
@@ -1409,7 +1417,7 @@ $("#mySave, #mySave2").click(function(){
 	var jsonoptionType = encodeURIComponent(JSON.stringify(optionTypeArray));//json으로 바꿈
 
 
-	var params = "jsonCheck="+jsonCheck+"&jsonName="+jsonName+"&jsonPrice="+jsonPrice+"&jsonSendMethod="+jsonSendMethod+"&jsonSendFeePayType="+jsonSendFeePayType+"&jsonSendFeeType="+jsonSendFeeType+"&jsonSendFeeFreeLimit="+jsonSendFeeFreeLimit+"&jsonSendFeeEachCnt="+jsonSendFeeEachCnt+"&jsonSendBasicFee="+jsonSendBasicFee+"&jsonRetunSendFee="+jsonRetunSendFee+"&jsonChangeSendFee="+jsonChangeSendFee+"&jsonOptCont1="+jsonOptCont1+"&jsonOptCont2="+jsonOptCont2+"&jsonOptCont3="+jsonOptCont3+"&jsonNowFee="+jsonNowFee+"&jsonNowUnit="+jsonNowUnit+"&jsonupRatio="+jsonupRatio;
+	var params = "jsonCheck="+jsonCheck+"&jsonName="+jsonName+"&jsonMemo="+jsonMemo+"&jsonPrice="+jsonPrice+"&jsonSendMethod="+jsonSendMethod+"&jsonSendFeePayType="+jsonSendFeePayType+"&jsonSendFeeType="+jsonSendFeeType+"&jsonSendFeeFreeLimit="+jsonSendFeeFreeLimit+"&jsonSendFeeEachCnt="+jsonSendFeeEachCnt+"&jsonSendBasicFee="+jsonSendBasicFee+"&jsonRetunSendFee="+jsonRetunSendFee+"&jsonChangeSendFee="+jsonChangeSendFee+"&jsonOptCont1="+jsonOptCont1+"&jsonOptCont2="+jsonOptCont2+"&jsonOptCont3="+jsonOptCont3+"&jsonNowFee="+jsonNowFee+"&jsonNowUnit="+jsonNowUnit+"&jsonupRatio="+jsonupRatio;
 
 //	console.log(params);
 //	return;

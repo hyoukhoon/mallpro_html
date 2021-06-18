@@ -14,6 +14,7 @@ $uid=$_SESSION['AID'];
 
 $jsonCheck=urldecode($_POST['jsonCheck']);
 $jsonName=rawurldecode($_POST['jsonName']);
+$jsonMemo=rawurldecode($_POST['jsonMemo']);
 $jsonPrice=urldecode($_POST['jsonPrice']);
 $jsonSendMethod=urldecode($_POST['jsonSendMethod']);
 $jsonSendFeePayType=urldecode($_POST['jsonSendFeePayType']);
@@ -36,6 +37,7 @@ $jsonoptionType=urldecode($_POST['jsonoptionType']);
 
 $itemNum=json_decode($jsonCheck);
 $itemName=json_decode($_POST['jsonName']);
+$itemMemo=json_decode($_POST['jsonMemo']);
 
 $itemPrice=json_decode($jsonPrice);
 $sendMethod=json_decode($jsonSendMethod);
@@ -61,7 +63,7 @@ $optionType=json_decode($jsonoptionType);
 	foreach($itemNum as $i){
 
 
-		$query = "update myItem set itemName='".rawurldecode($itemName[$kk])."', price='".$itemPrice[$kk]."', sendMethod='".$sendMethod[$kk]."', sendFeePayType='".$sendFeePayType[$kk]."', sendFeeType='".$sendFeeType[$kk]."', sendFeeFreeLimit='".$sendFeeFreeLimit[$kk]."', sendFeeEachCnt='".$sendFeeEachCnt[$kk]."', sendBasicFee='".$sendBasicFee[$kk]."', retunSendFee='".$retunSendFee[$kk]."', changeSendFee='".$changeSendFee[$kk]."', nowFee='".$nowFee[$kk]."', nowUnit='".$nowUnit[$kk]."' where num='".$i."'";
+		$query = "update myItem set itemName='".rawurldecode($itemName[$kk])."',itemMemo='".rawurldecode($itemMemo[$kk])."', price='".$itemPrice[$kk]."', sendMethod='".$sendMethod[$kk]."', sendFeePayType='".$sendFeePayType[$kk]."', sendFeeType='".$sendFeeType[$kk]."', sendFeeFreeLimit='".$sendFeeFreeLimit[$kk]."', sendFeeEachCnt='".$sendFeeEachCnt[$kk]."', sendBasicFee='".$sendBasicFee[$kk]."', retunSendFee='".$retunSendFee[$kk]."', changeSendFee='".$changeSendFee[$kk]."', nowFee='".$nowFee[$kk]."', nowUnit='".$nowUnit[$kk]."' where num='".$i."'";
 		$sql = $mysqli->query($query) or die($mysqli->error);
 
 		$que3="select pnum from myItem where num='".$i."'";
