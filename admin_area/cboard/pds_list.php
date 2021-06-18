@@ -1,0 +1,242 @@
+<?include "$DOCUMENT_ROOT/admin_page/inc/top.php";
+if(!$ps){
+	$ps=50;
+}
+
+if(!$multi){
+	$multi="pds";
+}
+
+
+function resizeimage($maxsize,$smallfile,$picture) 
+        {        
+                $picsize = getimagesize($picture);
+                if(!$picsize) { 
+						 //echo("손상된 이미지 이거나 이미지 정보를 갖어올 수 없습니다."); 
+						 return; 
+						 }
+                
+                // 가로가 세로보다 클 경우 가로를 기준으로 비율조정
+                if($picsize[0] > $picsize[1]) {                
+                        $rewidth = $maxsize;
+                        $reheight = round(($picsize[1]*$rewidth) / $picsize[0]);                        
+                } else {
+                // 세로가 가로보다 클 경우 세로를 기준으로 비율 조정
+                        $reheight = $maxsize;
+                        $rewidth = round(($picsize[0]*$reheight) / $picsize[1]);
+                }
+        
+            if($picsize[2]===1) {
+            $dstimg=ImageCreate($rewidth,$reheight);
+            $srcimg=@ImageCreateFromGIF($picture);
+            ImageCopyResized($dstimg, $srcimg,0,0,0,0,$rewidth,$reheight,ImageSX($srcimg),ImageSY($srcimg));
+            Imagegif($dstimg,$smallfile,76);
+            }
+            elseif($picsize[2]===2) {
+            $dstimg=ImageCreatetruecolor($rewidth,$reheight);
+            $srcimg=ImageCreateFromJPEG($picture);
+            Imagecopyresampled($dstimg, $srcimg,0,0,0,0,$rewidth,$reheight,ImageSX($srcimg),ImageSY($srcimg));
+            Imagejpeg($dstimg,$smallfile,76);
+            }
+            elseif($picsize[2]===3) {
+            $dstimg=ImageCreate($rewidth,$reheight);
+            $srcimg=ImageCreateFromPNG($picture);
+            ImageCopyResized($dstimg, $srcimg,0,0,0,0,$rewidth,$reheight,ImageSX($srcimg),ImageSY($srcimg));
+            Imagepng($dstimg,$smallfile,9);
+            }
+
+            @ImageDestroy($dstimg);
+            @ImageDestroy($srcimg); 
+        }
+                
+        $img_num_count = 0;
+        $img_dir = opendir("$DOCUMENT_ROOT/home/comm/data");
+        while($file = readdir($img_dir)) {
+                $imgtype = strrchr($file,".");                
+                if($file == "." or $file == ".." or !eregi("jpg|gif|bmp|png",$imgtype)) continue;
+                $img[] = $file;
+        }
+        
+        for($i=0;$i<sizeof($img);$i++) {
+                if(!$img[$i]) continue;
+                $simg = $img[$i];
+                if(!file_exists("$DOCUMENT_ROOT/home/comm/small/".$img[$i])) { 
+                        resizeimage(320,"$DOCUMENT_ROOT/home/comm/small/".$img[$i],"$DOCUMENT_ROOT/home/comm/data/".$img[$i]); 
+//                        echo("s".$img[$i]." create image <br>"); 
+                        set_time_limit(10);
+                        flush();
+                }                
+        }
+
+?>
+<script language="javascript" src="/js/popupcalendar.js"></script>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr><td class="title">데이타</td></tr>
+				<tr><td style="height:10px;"></td></tr>
+			</table>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+<form method="get" action="<?=$PHP_SELF?>" name="f">
+<input type="hidden" name="multi" value="<?=$multi?>">
+				<tr>
+					<td class="te_le te_gray2">
+						<select name="s_key" class="select">
+							<option value="">선택</option>
+							<option value="id" <?if($s_key=="id"){echo "selected";}?>>아이디</option>
+							<option value="name" <?if($s_key=="name"){echo "selected";}?>>이름</option>
+							<option value="subject" <?if($s_key=="subject"){echo "selected";}?>>제목</option>
+							<option value="content" <?if($s_key=="content"){echo "selected";}?>>내용</option>
+						</select>
+						<input type="text" name="s_word" class="input" size="30">
+						<input type="image" src="../img/btn_search.gif" align="absbottom">
+					</td>
+					<td align="right" class="te_le te_gray2">
+					</td>
+				</tr>
+				<tr><td colspan="2" style="height:10px;"></td></tr>
+				<tr><td colspan="2" style="height:1px;background-color:#ddd"></td></tr>
+				<tr><td colspan="2" style="height:10px;"></td></tr>
+</form>
+			</table>
+<br>
+<a href="write.php?multi=<?=$multi?>"><img src="/admin_page/img/btn_insert.gif"></a>
+<br>
+			<table width="100%" border="0" cellpadding="0" cellspacing="1" class="tab_01">
+				<tr>
+					<td class="th_01">No</td>
+					<td class="th_01">회사명</td>
+					<td class="th_01">제품명</td>
+					<td class="th_01">모델명</td>
+					<td class="th_01">등록일</td>
+					<td class="th_01">다운로드</td>
+					<td class="th_01">수정/삭제</td>
+
+				</tr>
+<?
+
+
+
+//검색 구분자
+
+	if($s_word){
+
+		if(!$s_key){
+			$s_key="id";
+		}
+
+		$where.=" and $s_key like '%$s_word%'";
+
+	}
+
+	if($fromDate){
+	$where.=" and substring(reg_date,1,10)>='$fromDate'";
+	}
+
+	if($toDate){
+		$where.=" and substring(reg_date,1,10)<='$toDate'";
+	}
+
+
+//	echo $where."<br>";
+
+$list=mysql_query("select count(*) from pds where num>0 $where") or die(mysql_error());
+
+
+
+$rs_list=mysql_fetch_array($list);
+$total=$rs_list[0];
+mysql_free_result($list);
+
+
+$page_size=$ps;//한페이지에 몇개를 표시할지
+$sub_size=10;//아래에 나오는 페이징은 몇개를 할지
+$total_page=ceil($total/$page_size);//몇페이지
+
+
+//page_no이 없거나 1보다 작으면 무조건 1
+if(!$page_no or $page_no<1){
+	$page_no=1;
+}
+
+
+//페이징의 첫 숫자
+if(!$f_no or $f_no<1){
+	$f_no=1;
+}
+
+
+//페이징의 마지막 숫자
+$l_no=$f_no+$sub_size-1;
+
+//l_no 이 토탈 페이지보다 크면
+if($l_no>$total_page){
+	$l_no=$total_page;
+}
+
+
+//어디부터
+$t_no=$page_size*($page_no-1);
+
+//어디까지
+$b_no=$page_size;
+
+$no=$total-($page_no-1)*$page_size;//번호매기기
+
+
+$result=mysql_query("select * from pds where num>0 $where order by num desc limit $t_no,$b_no") or die(mysql_error());
+while($rs=mysql_fetch_object($result)){
+
+$memo_date=strtotime($rs->memo_date)+86400;
+
+
+?>
+
+				<tr>
+					<td class="td_01"><?echo $no?></td>
+					<td class="td_01"><?echo $rs->company?></td>
+					<td class="td_02"><?echo $rs->pname?></td>
+					<td class="td_02"><?echo $rs->model?></td>
+					<td class="td_01">
+						<?echo substr($rs->reg_date,0,10);?>
+					</td>
+					<td class="td_01">
+						<a href="/board/data/<?=$rs->fn1?>">다운로드</a>
+					</td>
+					<td class="td_01">
+						<a href="/admin_page/cboard/pds_edit.php?num=<?=$rs->num?>">수정</a> / <a href="/admin_page/cboard/pds_del.php?num=<?=$rs->num?>" onclick="return confirm('삭제하시겠습니까?');">삭제</a>
+					</td>
+				</tr>
+<?
+	$no--;
+}
+
+	$n_f_no=$f_no+$sub_size;
+	$p_f_no=$f_no-$sub_size;
+?>
+
+			</table>
+<br><br>
+			<table width="100%" border="0" cellpadding="0" cellspacing="0">
+				<tr><td align="center">
+					<?if($f_no!=1){?><a href="<?=$PHP_SELF?>?n=<?=$n?>&level=<?=$level?>&cate=<?=$cate?>&page_no=<?=$i?>&f_no=<?=$p_f_no?>&multi=<?=$multi?>&sort=<?=$sort?>&s_key=<?=$s_key?>&s_word=<?=$s_word?>&fromDate=<?=$fromDate?>&toDate=<?=$toDate?>">◀</a><?}?>
+					<? for($i=$f_no;$i<=$l_no;$i++){?>
+					<?if($i==$page_no){?>
+					<b>[<?=$i?>]</b>
+					<?} else {?>
+					<a href="<?=$PHP_SELF?>?n=<?=$n?>&level=<?=$level?>&cate=<?=$cate?>&page_no=<?=$i?>&f_no=<?=$f_no?>&multi=<?=$multi?>&sort=<?=$sort?>&s_key=<?=$s_key?>&s_word=<?=$s_word?>&fromDate=<?=$fromDate?>&toDate=<?=$toDate?>">
+					[<?=$i?>]&nbsp;
+								</a>&nbsp;&nbsp;
+					<?}?>
+					<?}?>
+					<?if($l_no<$total_page){?><a href="<?=$PHP_SELF?>?n=<?=$n?>&level=<?=$level?>&cate=<?=$cate?>&page_no=<?=$i?>&f_no=<?=$n_f_no?>&multi=<?=$multi?>&sort=<?=$sort?>&s_key=<?=$s_key?>&s_word=<?=$s_word?>&fromDate=<?=$fromDate?>&toDate=<?=$toDate?>">▶</a><?}?>
+				</td></tr>
+			</table>
+<br>
+<br>
+<a href="pds_write.php?multi=<?=$multi?>"><img src="/admin_page/img/btn_insert.gif"></a>
+
+		</td>
+	</tr>
+</table>
+
+</body>
+</html>

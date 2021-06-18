@@ -1,0 +1,23 @@
+<?php include $_SERVER["DOCUMENT_ROOT"]."/inc/dbcon.php";
+
+$FILE_ID=json_decode(urldecode($_GET['FILE_ID']));
+
+foreach($FILE_ID as $p){
+
+	$que3="select FILE_ORDER,PRODUCT_ID from product_file_info where FILE_ID='".$p."'";
+	$result3 = $mysqli->query($que3) or die("1:".$mysqli->error);
+	$rs3 = $result3->fetch_array();
+	$fo=$rs3[0];
+	$pid=$rs3[1];
+
+	$que="update product_file_info set FILE_ORDER=FILE_ORDER-1 where PRODUCT_ID='".$pid."' and DEL_FLAG='0' and USE_FLAG='0' and FILE_ORDER>'".$fo."'";
+	$sql = $mysqli->query($que) or die("2:".$mysqli->error);
+
+	$que="update product_file_info set DEL_FLAG='1' where FILE_ID='".$p."' or FILE_ID_PARENT='".$p."'";
+	$sql = $mysqli->query($que) or die("3:".$mysqli->error);
+
+}
+
+echo $_GET['FILE_ID'];
+?>
+

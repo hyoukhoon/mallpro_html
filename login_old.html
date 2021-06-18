@@ -1,0 +1,56 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Mediapic Back-office</title>
+<link href="css/dcg_tmall.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="login_body_bg">
+  <div class="login_body_bgin">
+    
+    <div id="login_box" >
+            <h2 class="title"> <img src="/admin_page/images/img_MDPAdmin.png" alt="Mediapic Admin Login"/></h2>
+            <div class="login">
+                <fieldset>
+                    <legend>로그인</legend>
+                    <form name="lf" id="lf" method="post" action="login_ok.php">
+                        <ul class="login_input_area">
+                            <li class="label_id_input">
+                                <input type="text" id="id" name="id" tabindex="7" accesskey="L" placeholder="ID" class="int_login" />
+                            </li>
+                            <li class="label_pw_input">
+                                <input type="password" id="pw" name="pw" tabindex="7" accesskey="L" placeholder="PW" class="int_login"/>
+                            </li>
+                        </ul>
+                        <ul class="login_bu_area">
+                            <li><a href="#" onclick="sendform()" class="banner-button">login</a></li>
+                        </ul>
+                        <!-- <ul class="pw_id_checkarea">
+                            <li> <input type="checkbox" class="cb01" id="ch_text01">  
+                             <label for="ch_text01">Remember ID</label>
+		                    </li>
+                        </ul> -->
+                    </form>
+                </fieldset>
+            </div>
+            <!-- login// --> 
+        </div>
+        <!-- login_box// --> 
+   
+       
+       
+   <div style="position:absolute; bottom:17px; color:#fff; width:100%; text-align:center;">
+    <address> Copyright ⓒ 2TusNetwork inc.. All Rights Reserved. </address>
+   </div>
+  </div>
+<script>
+	function sendform(){
+		a=document.lf;
+
+		a.submit();
+	}
+</script>
+
+</body>
+</html>
